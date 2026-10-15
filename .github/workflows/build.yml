@@ -23,17 +23,18 @@ jobs:
           flutter-version: '3.19.x'
           channel: 'stable'
 
-      - name: Generate Platform Files (Android)
-        run: flutter create . --platforms=android --project-name=pdf_scanner_app
-
-      - name: Install Dependencies
-        run: flutter pub get
-
-      - name: Build APK Release
-        run: flutter build apk --release
+      - name: Build APK via Temp Project
+        run: |
+          flutter create temp_app --platforms=android --org com.example.pdfscanner
+          rm -rf temp_app/lib temp_app/pubspec.yaml
+          cp -r lib temp_app/
+          cp pubspec.yaml temp_app/
+          cd temp_app
+          flutter pub get
+          flutter build apk --release
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: temp_app/build/app/outputs/flutter-apk/app-release.apk
