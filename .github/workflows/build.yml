@@ -27,7 +27,11 @@ jobs:
         run: |
           flutter create temp_app --platforms=android --org com.example.pdfscanner
           rm -rf temp_app/lib temp_app/pubspec.yaml
-          cp -r lib temp_app/
+          if [ -d "lib" ]; then
+            cp -r lib temp_app/
+          elif [ -d "Lib" ]; then
+            cp -r Lib temp_app/lib
+          fi
           cp pubspec.yaml temp_app/
           cd temp_app
           flutter pub get
